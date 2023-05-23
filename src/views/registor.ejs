@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include style %>
+    <title>注册</title>
+  </head>
+    <body>
+      <div class="page-container">
+        <form action="/api/login" method="post" class="form-example">
+          <div class="form-example">
+            <label for="name">用户名</label>
+            <input type="text" name="name" id="name" required>
+          </div>
+          <div class="form-example">
+            <label for="password">密码</label>
+            <input type="password" name="password" id="password" required>
+          </div>
+          <div class="form-example">
+            <label for="password1">再次输入密码</label>
+            <input type="password1" name="password1" id="password1" required>
+          </div>
+          <div class="form-example">
+            <input type="submit" value="注册">
+          </div>
+        </form>
+      </div>
+    </body>
+</html>
