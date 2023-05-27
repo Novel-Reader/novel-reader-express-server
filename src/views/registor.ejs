@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <%- include style %>
+    <%- include('style') %>
     <title>注册</title>
   </head>
     <body>
       <div class="page-container">
-        <form action="/api/login" method="post" class="form-example">
+        <!-- 暂时没有支持界面 -->
+        <form action="/admin/registor" method="post" class="form-example">
           <div class="form-example">
             <label for="name">用户名</label>
             <input type="text" name="name" id="name" required>
