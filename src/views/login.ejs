@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <%- include style %>
+    <%- include('style') %>
     <title>登录</title>
   </head>
     <body>
       <div class="page-container">
-        <form action="/api/login" method="post" class="form-example">
+        <form action="/admin/login" method="post" class="form-example">
           <div class="form-example">
-            <label for="name">用户名</label>
-            <input type="text" name="name" id="name" required>
+            <label for="email">邮箱</label>
+            <input type="text" name="email" id="email" required>
           </div>
           <div class="form-example">
             <label for="password">密码</label>
