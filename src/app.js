@@ -10,6 +10,7 @@ const { SIGNKEY } = require('./utils/constants');
 const pingRouter = require('./routes/ping');
 const indexRouter = require('./routes/index');
 const apiRouter = require('./routes/api');
+const adminRouter = require('./routes/admin');
 
 const app = express();
 
@@ -44,6 +45,7 @@ app.use('/', indexRouter);
 // TODO: ping 路由移动到 api 中
 app.use('/ping', pingRouter);
 app.use('/api', apiRouter);
+app.use('/admin', adminRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
