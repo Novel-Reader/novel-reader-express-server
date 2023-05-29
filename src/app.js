@@ -26,6 +26,20 @@ app.use(cookieParser());
 // handle static public import path
 app.use(express.static(path.join(__dirname, 'public')));
 
+// handle browser cross origin
+app.all("*", function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "content-type");
+  res.header("Access-Control-Allow-Methods", "DELETE,PUT,POST,GET,OPTIONS");
+  res.header("Content-Type", "application/json;charset=utf-8");
+  res.header("Access-Control-Allow-Headers", "content-type,Authorization");
+  if (req.method === 'OPTIONS') {
+    res.sendStatus(200);
+  } else {
+    next();
+  }
+});
+
 app.use('/', indexRouter);
 // TODO: ping 路由移动到 api 中
 app.use('/ping', pingRouter);
@@ -78,22 +92,6 @@ app.use(function (err, req, res, next) {
     if (err.status === 401) {
       return res.status(401).send('Token is invalid');
     }
-  }
-});
-
-// handle browser cross origin
-app.all("*", function (req, res, next) {
-  // cross origin
-  // 浏览器开启在 3000 端口，服务器开启在 8081 端口，所以浏览器直接访问会跨域，目前解决措施是浏览器 open-chrome.sh 脚本实现取消跨域限制
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "content-type");
-  res.header("Access-Control-Allow-Methods", "DELETE,PUT,POST,GET,OPTIONS");
-  res.header("Content-Type", "application/json;charset=utf-8");
-  res.header("Access-Control-Allow-Headers", "content-type,Authorization");
-  if (req.method === 'OPTIONS') {
-    res.sendStatus(200);
-  } else {
-    next();
   }
 });
 
