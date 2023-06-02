@@ -4,7 +4,7 @@ const DBHelper = require('../utils/db-helper');
 const { setToken } = require('../utils/token');
 const logger = require('../utils/logger');
 
-// 管理员
+// 用于后台管理员发送请求
 router.post('/login', function(req, res, next) {
   const { email, password } = req.body;
   const sql = `SELECT * FROM user WHERE email=? and password=?`;
@@ -27,6 +27,7 @@ router.post('/login', function(req, res, next) {
     }
     setToken(email).then((data) => {
       res.status(200).json({ token: data });
+      return;
     });
   }, [email, password]);
 });

@@ -7,7 +7,6 @@ const logger = require('./utils/logger');
 const { verifyToken } = require('./utils/token');
 const { SIGNKEY } = require('./utils/constants');
 
-const pingRouter = require('./routes/ping');
 const indexRouter = require('./routes/index');
 const apiRouter = require('./routes/api');
 const adminRouter = require('./routes/admin');
@@ -27,6 +26,10 @@ app.use(cookieParser());
 // handle static public import path
 app.use(express.static(path.join(__dirname, 'public')));
 
+// 这两个用于后台登录，不需要执行跨域（如果放在跨域后面，返回值解析不正确）
+app.use('/', indexRouter);
+app.use('/admin', adminRouter);
+
 // handle browser cross origin
 app.all("*", function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
@@ -41,11 +44,8 @@ app.all("*", function (req, res, next) {
   }
 });
 
-app.use('/', indexRouter);
-// TODO: ping 路由移动到 api 中
-app.use('/ping', pingRouter);
+// 这个用于前端项目发送请求，需要处理跨域
 app.use('/api', apiRouter);
-app.use('/admin', adminRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
