@@ -1,12 +1,8 @@
 const express = require('express');
 const router = express.Router();
 
-// 目前不需要支持直接后端登录，这个暂时放在这里，不使用
+// 用于后端开发时，直接渲染单页面
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Genshin novel reader' });
-});
-
-router.post('/', function(req, res, next) {
   res.render('index', { title: 'Genshin novel reader' });
 });
 
@@ -16,12 +12,10 @@ router.get('/login', function(req, res, next) {
   res.render('login');
 });
 
-// registor
 router.get('/registor', function(req, res, next) {
   res.render('registor');
 });
 
-// logout
 router.get('/logout', function(req, res, next) {
   res.render('logout');
 });

@@ -4,8 +4,8 @@ const DBHelper = require('../utils/db-helper');
 const { setToken } = require('../utils/token');
 const logger = require('../utils/logger');
 
-// 主要是这个文件
-// 127.0.0.1:8081/api/login/
+// 用于客户端 API 发送请求
+// 如果客户端不会使用，那么移动到 admin 路由中
 router.post('/login', function(req, res, next) {
   const { email, password } = req.body;
   const sql = `SELECT * FROM user WHERE email=? and password=?`;
