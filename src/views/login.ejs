@@ -22,7 +22,7 @@
   </head>
     <body>
       <div class="page-container">
-        <form action="/admin/login" method="post">
+        <form action="/login" method="post">
           <div class="form-item">
             <label for="email">邮箱</label>
             <input type="text" name="email" id="email" required>
@@ -31,7 +31,6 @@
             <label for="password">密码</label>
             <input type="password" name="password" id="password" required>
           </div>
-          <!-- 点击登录后，怎样界面不直接跳转呢？应该获取返回的参数 -->
           <div class="form-item">
             <input class="btn btn-primary" type="submit" value="登录">
           </div>
@@ -40,6 +39,9 @@
           <a href="/registor">立即注册</a>
           <a href="/forget">找回密码</a>
         </div>
+        <% if(error) {%> 
+          <div class="error"><%= error %></div>
+        <% } %>
       </div>
     </body>
 </html>

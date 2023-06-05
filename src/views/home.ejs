@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include('style') %>
+    <title>主页</title>
+  </head>
+    <body>
+      <div class="page-container">
+        <% if(token) {%> 
+          登录成功
+        <% } else { %>
+          没有登录，请登录
+        <% } %>
+      </div>
+    </body>
+</html>

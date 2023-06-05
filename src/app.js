@@ -9,7 +9,7 @@ const { SIGNKEY } = require('./utils/constants');
 
 const indexRouter = require('./routes/index');
 const apiRouter = require('./routes/api');
-const adminRouter = require('./routes/admin');
+// const adminRouter = require('./routes/admin');
 
 const app = express();
 
@@ -28,7 +28,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // 这两个用于后台登录，不需要执行跨域（如果放在跨域后面，返回值解析不正确）
 app.use('/', indexRouter);
-app.use('/admin', adminRouter);
+// app.use('/admin', adminRouter);
 
 // handle browser cross origin
 app.all("*", function (req, res, next) {
