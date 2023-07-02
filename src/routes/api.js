@@ -1,4 +1,5 @@
 const express = require('express');
+const moment = require('moment');
 const router = express.Router();
 const DBHelper = require('../utils/db-helper');
 const { setToken } = require('../utils/token');
@@ -248,6 +249,39 @@ router.get('/search-novel', function (req, res) {
     }
     res.status(200).send(results);
   }, [id]);
+});
+
+router.post('/comment', function (req, res) {
+  let { book_id, detail, author } = req.body;
+  if (!book_id) {
+    res.status(400).send({ error_massage: 'book_id is required' });
+  }
+  // TODO 检查书籍是否存在
+  // select * from book 先查询一下 book 是否存在
+  const created_at = moment().format("YYYY-MM-DD HH:mm:ss");
+  const sql = `insert into comment (book_id, detail, author, created_at) values(?, ?, ?, ?)`;
+  DBHelper(sql, (err, results) => {
+    if (err) {
+      logger.error(err);
+      res.status(400).send({ error_massage: err });
+      return;
+    }
+    res.status(200).send('success');
+  }, [book_id, detail, author, created_at]);
+});
+
+// todo limit and start
+router.get('/comment', function (req, res) {
+  const book_id = req.query.book_id;
+  const sql = `SELECT id, author, detail, created_at FROM comment WHERE book_id=?`;
+  DBHelper(sql, (err, results) => {
+    if (err) {
+      logger.error(err);
+      res.status(400).send({ error_massage: err });
+      return;
+    }
+    res.status(200).send(results);
+  }, [book_id]);
 });
 
 module.exports = router;
