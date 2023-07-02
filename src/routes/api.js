@@ -284,4 +284,38 @@ router.get('/comment', function (req, res) {
   }, [book_id]);
 });
 
+router.put('/comment', function (req, res) {
+  let { comment_id, detail } = req.body;
+  if (!comment_id || !detail) {
+    res.status(400).send({ error_massage: 'comment_id and detail are required' });
+  }
+  // TODO add column last updated times
+  const sql = `update comment set detail = ? where id = ?`;
+  DBHelper(sql, (err, results) => {
+    if (err) {
+      logger.error(err);
+      res.status(400).send({ error_massage: err });
+      return;
+    }
+    res.status(200).send('success');
+  }, [detail, comment_id]);
+});
+
+router.delete('/comment', function (req, res) {
+  const comment_id = req.query.id;
+  if (!comment_id) {
+    res.status(400).send({ error_massage: 'comment_id is required' });
+  }
+  const sql = `DELETE FROM comment WHERE id=?`;
+  DBHelper(sql, (err, results) => {
+    if (err) {
+      logger.error(err);
+      res.status(400).send({ error_massage: err });
+      return;
+    }
+    logger.info(results);
+    res.status(200).send('success');
+  }, [comment_id]);
+});
+
 module.exports = router;
