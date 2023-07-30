@@ -270,10 +270,12 @@ router.post('/comment', function (req, res) {
   }, [book_id, detail, author, created_at]);
 });
 
-// todo limit and start
 router.get('/comment', function (req, res) {
-  const book_id = req.query.book_id;
-  const sql = `SELECT id, author, detail, created_at FROM comment WHERE book_id=?`;
+  const { book_id, start = 1, limit = 10 } = req.query;
+  if (!book_id) {
+    res.status(400).send({ error_massage: 'book_id is required' });
+  }
+  const sql = `SELECT id, author, detail, created_at FROM comment WHERE book_id=? limit ?, ?`;
   DBHelper(sql, (err, results) => {
     if (err) {
       logger.error(err);
@@ -281,7 +283,7 @@ router.get('/comment', function (req, res) {
       return;
     }
     res.status(200).send(results);
-  }, [book_id]);
+  }, [book_id, (start - 1) * limit, Number(limit)]);
 });
 
 router.put('/comment', function (req, res) {
