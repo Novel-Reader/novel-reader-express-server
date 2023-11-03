@@ -1,0 +1,11 @@
+# Node modules
+node_modules/
+
+# site
+dist/
+
+# log
+*.log
+
+# public source
+public/
