@@ -186,10 +186,10 @@ router.get("/users", function (req, res) {
 });
 
 router.post("/novel", function (req, res) {
-  let { name, cover_photo, author, detail, price, brief } = req.body;
+  let { name, cover_photo, author, detail, price, brief, size, tag } = req.body;
+  // TODO optimize codes
   if (!cover_photo) {
-    // use default book image
-    cover_photo = "https://www.baidu.com/img/flexible/logo/pc/result@2.png";
+    cover_photo = "https://www.baidu.com/img/flexible/logo/pc/result@2.png"; // use default book image
   }
   if (!author) {
     author = "佚名";
@@ -200,7 +200,13 @@ router.post("/novel", function (req, res) {
   if (!brief) {
     brief = detail.slice(0, 300);
   }
-  const sql = `insert into book (name, cover_photo, author, detail, price, brief) values(?, ?, ?, ?, ?, ?)`;
+  if (!size) {
+    size = 1;
+  }
+  if (!tag) {
+    tag = '';
+  }
+  const sql = `insert into book (name, cover_photo, author, detail, price, brief, size, tag) values(?, ?, ?, ?, ?, ?, ?, ?)`;
   DBHelper(
     sql,
     (err, results) => {
@@ -211,7 +217,7 @@ router.post("/novel", function (req, res) {
       }
       res.status(200).send("success");
     },
-    [name, cover_photo, author, detail, price, brief]
+    [name, cover_photo, author, detail, price, brief, size, tag]
   );
 });
 
@@ -235,7 +241,7 @@ router.delete("/novel", function (req, res) {
 
 // get novel list for index page
 router.get("/novel_list", function (req, res) {
-  const sql = `SELECT id, name, cover_photo, author, brief, price FROM book limit 10`;
+  const sql = `SELECT id, name, cover_photo, author, brief, price, size, tag FROM book limit 10`;
   DBHelper(
     sql,
     (err, results) => {
@@ -256,7 +262,7 @@ router.post("/search-novel", function (req, res) {
   if (!name && !author && !price) {
     res.status(400).send({ error_massage: "query parameters is null" });
   }
-  let sql = `SELECT id, name, author, price, brief, cover_photo FROM book WHERE `;
+  let sql = `SELECT id, name, author, price, brief, cover_photo, size, tag FROM book WHERE `;
   const params = [];
   const sql_list = [];
   if (name) {
