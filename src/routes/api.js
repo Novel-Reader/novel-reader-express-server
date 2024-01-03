@@ -314,14 +314,15 @@ router.get("/search-novel", function (req, res) {
 });
 
 router.post("/comment", function (req, res) {
+  // TODO user_id
   let { book_id, detail, author } = req.body;
   if (!book_id) {
     res.status(400).send({ error_massage: "book_id is required" });
   }
   // TODO 检查书籍是否存在
   // select * from book 先查询一下 book 是否存在
-  const created_at = moment().format("YYYY-MM-DD HH:mm:ss");
-  const sql = `insert into comment (book_id, detail, author, created_at) values(?, ?, ?, ?)`;
+  // TODO user_id
+  const sql = `insert into comment (book_id, detail, author, created_at) values(?, ?, ?, NOW())`;
   DBHelper(
     sql,
     (err, results) => {
@@ -332,7 +333,8 @@ router.post("/comment", function (req, res) {
       }
       res.status(200).send("success");
     },
-    [book_id, detail, author, created_at]
+    // TODO user_id
+    [book_id, detail, author]
   );
 });
 
@@ -341,6 +343,7 @@ router.get("/comment", function (req, res) {
   if (!book_id) {
     res.status(400).send({ error_massage: "book_id is required" });
   }
+  // TODO user_id
   const sql = `SELECT id, author, detail, created_at FROM comment WHERE book_id=? limit ?, ?`;
   DBHelper(
     sql,
