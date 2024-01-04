@@ -1,5 +1,4 @@
 const express = require("express");
-const moment = require("moment");
 const router = express.Router();
 const DBHelper = require("../utils/db-helper");
 const { setToken } = require("../utils/token");
@@ -320,8 +319,9 @@ router.post("/comment", function (req, res) {
   }
   // TODO 检查书籍是否存在
   // select * from book 先查询一下 book 是否存在
-  const created_at = moment().format("YYYY-MM-DD HH:mm:ss");
   const sql = `insert into comment (book_id, detail, author, created_at) values(?, ?, ?, ?)`;
+  // 注：mysql 使用 NOW() 生成的时间是数据库的时间，nodejs 使用 new Date() 生成的是当前服务器的时间，可能不一样。所以这里用 nodejs 服务器时间
+  const t = new Date();
   DBHelper(
     sql,
     (err, results) => {
@@ -332,7 +332,7 @@ router.post("/comment", function (req, res) {
       }
       res.status(200).send("success");
     },
-    [book_id, detail, author, created_at]
+    [book_id, detail, author, t]
   );
 });
 
