@@ -169,21 +169,6 @@ router.post("/user-avatar", function (req, res) {
   );
 });
 
-// list all user infos for admin
-router.get("/users", function (req, res) {
-  // check admin
-  // TODO should not return password
-  const sql = `SELECT * FROM user order by id asc`;
-  DBHelper(sql, (err, results) => {
-    if (err) {
-      logger.error(err);
-      res.status(400).send({ error_massage: err });
-      return;
-    }
-    res.status(200).send(results);
-  });
-});
-
 router.post("/novel", function (req, res) {
   let { name, cover_photo, author, detail, price, brief, size, tag } = req.body;
   // TODO optimize codes
@@ -398,6 +383,47 @@ router.delete("/comment", function (req, res) {
     },
     [comment_id]
   );
+});
+
+// admin module
+router.get("/admin/users", function (req, res) {
+  // check admin
+  const sql = `SELECT * FROM user order by id asc`;
+  DBHelper(sql, (err, results) => {
+    if (err) {
+      logger.error(err);
+      res.status(400).send({ error_massage: err });
+      return;
+    }
+    res.status(200).send(results);
+  });
+});
+
+router.get("/admin/books", function (req, res) {
+  // check admin
+  const sql = `SELECT id, name, author, price FROM book order by id asc`;
+  DBHelper(sql, (err, results) => {
+    if (err) {
+      logger.error(err);
+      res.status(400).send({ error_massage: err });
+      return;
+    }
+    res.status(200).send(results);
+  });
+});
+
+router.get("/admin/comments", function (req, res) {
+  // check admin
+  const sql = `SELECT * FROM comment order by id asc`;
+  // TODO 跨表查询 join，返回对应的书籍名称 select name from book where book.id = comments.book_id
+  DBHelper(sql, (err, results) => {
+    if (err) {
+      logger.error(err);
+      res.status(400).send({ error_massage: err });
+      return;
+    }
+    res.status(200).send(results);
+  });
 });
 
 module.exports = router;
