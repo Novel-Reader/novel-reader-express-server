@@ -3,6 +3,7 @@ const router = express.Router();
 const DBHelper = require("../utils/db-helper");
 const { setToken } = require("../utils/token");
 const logger = require("../utils/logger");
+const { getValueFromRedis, setValueFromRedis } = require("../utils/redis-helper");
 
 // 主要是这个文件
 // 127.0.0.1:8081/api/login/
@@ -279,22 +280,36 @@ router.post("/search-novel", function (req, res) {
 
 // get novel detail
 router.get("/search-novel", function (req, res) {
-  const id = req.query.id;
-  const sql = `SELECT * from book WHERE id=?`;
   // TODO: Once per download, the database records the number of downloads (download hot list)
   // which also facilitates hotspot monitoring and early warning
-  DBHelper(
-    sql,
-    (err, results) => {
-      if (err) {
-        logger.error(err);
-        res.status(400).send({ error_massage: err });
-        return;
-      }
-      res.status(200).send(results);
-    },
-    [id]
-  );
+  const id = req.query.id;
+  // get detail from redis first, if not, get from mysql
+  getValueFromRedis('book-' + id, (err, result) => {
+    if (err) {
+      logger.error(err);
+      res.status(400).send({ error_massage: err });
+      return;
+    }
+    if (result) {
+      res.status(200).send(JSON.parse(result));
+      return;
+    } else {
+      const sql = `SELECT * from book WHERE id=?`;
+      DBHelper(
+        sql,
+        (err, results) => {
+          if (err) {
+            logger.error(err);
+            res.status(400).send({ error_massage: err });
+            return;
+          }
+          setValueFromRedis('book-' + id, JSON.stringify(results));
+          res.status(200).send(results);
+        },
+        [id]
+      );
+    }
+  });
 });
 
 router.post("/comment", function (req, res) {

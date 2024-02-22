@@ -3,5 +3,7 @@
   "user": "root",
   "password": "rootroot",
   "database": "novel",
-  "port": "3306"
+  "port": "3306",
+  "redisHost": "localhost",
+  "redisPort": "redisPort"
 }
