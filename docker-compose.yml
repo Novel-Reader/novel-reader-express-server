@@ -1,18 +1,18 @@
 version: "3"
 
 services:
-  
-  # db:
-  #   image: mariadb:10.5
-  #   container_name: novel-mysql
-  #   volumes:
-  #     # - "/opt/mysql-data:/var/lib/mysql"
-  #   ports:
-  #     - 3306:3306
-  #   environment:
-  #     - MYSQL_ROOT_PASSWORD=db_dev
-  #     - MYSQL_LOG_CONSOLE=true
-  #     - lower_case_table_names=1
+
+  db:
+    image: mariadb:10.5
+    container_name: novel-mysql
+    volumes:
+      - "/Users/seafile/Desktop/code-new/novel-reader-express-server/mysql-data:/var/lib/mysql"
+    ports:
+      - 3306:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=db_dev
+      - MYSQL_LOG_CONSOLE=true
+      - lower_case_table_names=1
 
   redis:
     image: "redis:alpine"
