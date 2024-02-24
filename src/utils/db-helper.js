@@ -1,15 +1,18 @@
 const mysql = require("mysql");
 const CONFIG = require("../config/config.json");
+const LOCAL_CONFIG = require("../config/config-local.json");
 const logger = require("./logger");
 
+const config = LOCAL_CONFIG || CONFIG;
+
 const mysql_config = {
-  host: CONFIG.host,
-  user: CONFIG.user,
-  password: CONFIG.password,
-  database: CONFIG.database,
-  port: CONFIG.port,
+  host: config.mysqlHost,
+  port: config.mysqlPort,
+  user: config.user,
+  password: config.password,
+  database: config.database,
+  connectionLimit: config.connectionLimit || 10,
   charset: "UTF8MB4",
-  connectionLimit: CONFIG.connectionLimit || 10,
   timezone: "+00:00",
 };
 
