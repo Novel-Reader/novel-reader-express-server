@@ -3,7 +3,10 @@ const router = express.Router();
 const DBHelper = require("../utils/db-helper");
 const { setToken } = require("../utils/token");
 const logger = require("../utils/logger");
-const { getValueFromRedis, setValueFromRedis } = require("../utils/redis-helper");
+const {
+  getValueFromRedis,
+  setValueFromRedis,
+} = require("../utils/redis-helper");
 
 // 主要是这个文件
 // 127.0.0.1:8081/api/login/
@@ -189,7 +192,7 @@ router.post("/novel", function (req, res) {
     size = 1;
   }
   if (!tag) {
-    tag = '';
+    tag = "";
   }
   const sql = `insert into book (name, cover_photo, author, detail, price, brief, size, tag) values(?, ?, ?, ?, ?, ?, ?, ?)`;
   DBHelper(
@@ -284,7 +287,7 @@ router.get("/search-novel", function (req, res) {
   // which also facilitates hotspot monitoring and early warning
   const id = req.query.id;
   // get detail from redis first, if not, get from mysql
-  getValueFromRedis('book-' + id, (err, result) => {
+  getValueFromRedis("book-" + id, (err, result) => {
     if (err) {
       logger.error(err);
       res.status(400).send({ error_massage: err });
@@ -303,7 +306,7 @@ router.get("/search-novel", function (req, res) {
             res.status(400).send({ error_massage: err });
             return;
           }
-          setValueFromRedis('book-' + id, JSON.stringify(results));
+          setValueFromRedis("book-" + id, JSON.stringify(results));
           res.status(200).send(results);
         },
         [id]

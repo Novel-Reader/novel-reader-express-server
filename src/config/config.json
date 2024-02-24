@@ -1,9 +1,9 @@
 {
-  "host": "127.0.0.1",
   "user": "root",
   "password": "db_dev",
   "database": "novel",
-  "port": "3306",
-  "redisHost": "localhost",
+  "mysqlHost": "127.0.0.1",
+  "mysqlPort": "3306",
+  "redisHost": "127.0.0.1",
   "redisPort": "6379"
 }

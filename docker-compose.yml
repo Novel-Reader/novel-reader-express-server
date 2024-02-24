@@ -1,7 +1,6 @@
 version: "3"
 
 services:
-
   db:
     image: mariadb:10.5
     container_name: novel-mysql
