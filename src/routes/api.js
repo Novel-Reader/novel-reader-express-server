@@ -4,6 +4,7 @@ const ApiAdmin = require('./api-admin');
 const ApiNovel = require('./api-novel');
 const ApiUser = require('./api-user');
 const ApiLogin = require('./api-login');
+const ApiUserBook = require('./api-user-book');
 
 const router = express.Router();
 
@@ -31,5 +32,9 @@ router.delete("/comment", ApiComment.deleteComment);
 router.get("/admin/users", ApiAdmin.getUsers);
 router.get("/admin/books", ApiAdmin.getBooks);
 router.get("/admin/comments", ApiAdmin.getComments);
+
+router.get("/user-book", ApiUserBook.getUserBookList);
+router.post("/user-book", ApiUserBook.updateUserBook);
+router.delete("/user-book", ApiUserBook.deleteUserBook);
 
 module.exports = router;

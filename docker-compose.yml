@@ -5,7 +5,7 @@ services:
     image: mariadb:10.5
     container_name: novel-mysql
     volumes:
-      - "/Users/seafile/Desktop/code-new/novel-reader-express-server/mysql-data:/var/lib/mysql"
+      - "/xxx/novel-reader-express-server/mysql-data:/var/lib/mysql"
     ports:
       - 3306:3306
     environment:

@@ -26,18 +26,21 @@ class ApiNovel {
       tag = "";
     }
     const sql = `insert into book (name, cover_photo, author, detail, price, brief, size, tag) values(?, ?, ?, ?, ?, ?, ?, ?)`;
-    DBHelper(
-      sql,
-      (err, results) => {
-        if (err) {
-          logger.error(err);
+    DBHelper(sql, (err, results) => {
+      if (err) {
+        logger.error(err);
+        res.status(400).send({ error_massage: err });
+        return;
+      }
+      DBHelper('SELECT id, name FROM book ORDER BY id DESC LIMIT 1', (err2, results2) => {
+        if (err2) {
+          logger.error(err2);
           res.status(400).send({ error_massage: err });
           return;
         }
-        res.status(200).send("success");
-      },
-      [name, cover_photo, author, detail, price, brief, size, tag]
-    );
+        res.status(200).send(results2);
+      }, []);
+    }, [name, cover_photo, author, detail, price, brief, size, tag]);
   }
 
   static deleteNovel(req, res) {
