@@ -10,6 +10,7 @@ const crossOriginMiddleWare = require("./middlewares/cross-origin");
 const errorHandlerMiddleWare = require("./middlewares/error-handler");
 const verifyTokenMiddleWare = require("./middlewares/verify-token");
 const verifyTokenExpiresMiddleWare = require("./middlewares/verify-token-expires");
+const monitorMiddleWare = require("./middlewares/monitor");
 
 const app = express();
 
@@ -26,6 +27,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 app.all("*", crossOriginMiddleWare);
+app.use(monitorMiddleWare);
 
 app.use("/", indexRouter);
 app.use("/ping", pingRouter);
