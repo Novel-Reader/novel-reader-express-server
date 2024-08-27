@@ -63,7 +63,7 @@ class ApiNovel {
 
   // get novel list for index page
   static getNovelList(req, res) {
-    const sql = `SELECT id, name, cover_photo, author, brief, price, size, tag FROM book limit 10`;
+    const sql = `SELECT id, name, cover_photo, author, brief, price, size, tag, download_count FROM book ORDER BY download_count DESC limit 10`;
     DBHelper(
       sql,
       (err, results) => {
@@ -116,12 +116,30 @@ class ApiNovel {
   }
 
   // get novel detail
-  static getNovelDetail(req, res) {
-    // TODO: Once per download, the database records the number of downloads (download hot list)
-    // which also facilitates hotspot monitoring and early warning
-    const id = req.query.id;
-    // get detail from redis first, if not, get from mysql
-    getValueFromRedis("book-" + id, (err, result) => {
+  static async getNovelDetail(req, res) {
+    // 01 generate download info
+    const { book_id, user_id } = req.query;
+    const sql = `insert into download_info (userid, bookid) values(?, ?)`;
+    await DBHelper(sql,(err, results) => {
+      if (err) {
+        logger.error(err);
+        res.status(400).send({ error_massage: err });
+        return;
+      }
+      // Count the download count of download_info table and write it into the book table
+      if (results) {
+        const sql = `update book set download_count = (select count(id) from download_info WHERE bookid=?) where id=?;`;
+        DBHelper(sql,(err, results) => {
+          if (err) {
+            logger.error(err);
+            res.status(400).send({ error_massage: err });
+            return;
+          }
+        },[book_id, book_id]);
+      }
+    },[user_id, book_id]);
+    // 02 get detail from redis, if not, get from mysql
+    getValueFromRedis("book-" + book_id, (err, result) => {
       if (err) {
         logger.error(err);
         res.status(400).send({ error_massage: err });
@@ -140,10 +158,10 @@ class ApiNovel {
               res.status(400).send({ error_massage: err });
               return;
             }
-            setValueFromRedis("book-" + id, JSON.stringify(results));
+            setValueFromRedis("book-" + book_id, JSON.stringify(results));
             res.status(200).send(results);
           },
-          [id]
+          [book_id]
         );
       }
     });
