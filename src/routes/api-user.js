@@ -45,7 +45,7 @@ class ApiUser {
           return;
         }
         if (results.length > 0) {
-          res.status(400).send({ error_massage: "This emial is used" });
+          res.status(400).send({ error_massage: "This email is used" });
           return;
         }
         // If can not find email in db, insert new email into db

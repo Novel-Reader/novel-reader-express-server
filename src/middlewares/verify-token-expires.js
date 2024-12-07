@@ -1,12 +1,12 @@
 const { expressjwt } = require("express-jwt");
-const { SIGNKEY } = require("../utils/constants");
+const { SIGN_KEY } = require("../utils/constants");
 
 const verifyTokenExpiresMiddleWare = expressjwt({
-  secret: SIGNKEY,
+  secret: SIGN_KEY,
   algorithms: ["HS256"],
 }).unless({
-  // Specify which routes need not be verified. In addition to login or registor, other URLs need to be verified
-  path: ["/api/login", "/api/registor"],
+  // Specify which routes need not be verified. In addition to login or register, other URLs need to be verified
+  path: ["/api/login", "/api/register"],
 });
 
 module.exports = verifyTokenExpiresMiddleWare;

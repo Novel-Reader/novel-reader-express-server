@@ -16,9 +16,9 @@ router.get("/login", function (req, res, next) {
   res.render("login");
 });
 
-// registor
-router.get("/registor", function (req, res, next) {
-  res.render("registor");
+// register
+router.get("/register", function (req, res, next) {
+  res.render("register");
 });
 
 // logout
