@@ -43,6 +43,57 @@ class ApiNovel {
     }, [name, cover_photo, author, detail, price, brief, size, tag]);
   }
 
+  static batchUploadNovel(req, res) {
+    const files = req.files;
+    try {
+      const fileContents = files.map(file => file.buffer.toString('utf8'));    
+      const fileNames = files.map(file => {
+        if (file.encoding === 'utf-8') {
+          return file.originalname;
+        }
+        // 格式 7bit 编码格式是 ASCII 编码格式的一个子集，用于表示 ASCII 字符集中的字符，需要 'latin1'转换
+        else if (file.encoding === '7bit') {
+          return Buffer.from(file.originalname, 'latin1').toString('utf8');
+        }
+        else if (file.encoding === 'binary') {
+          return Buffer.from(file.originalname, 'binary').toString('utf8');
+        }
+        else if (file.encoding === 'gbk' || file.encoding === 'gb2312') {
+          return Buffer.from(file.originalname, file.encoding).toString('utf8');
+        }
+      });
+      const cover_photo = "https://www.baidu.com/img/flexible/logo/pc/result@2.png"; // use default book image
+      const author = "佚名";
+      const price = 0;
+      const size = 1;
+      const tag = "";
+      const briefs = fileContents.map(item => item.slice(0, 300));
+      // 在 MariaDB 中，你可以使用以下方法来插入多条数据：使用单个 INSERT INTO 语句，多个 VALUES 子句：
+      // INSERT INTO book (name, cover_photo, author, detail, price, brief, size, tag) VALUES (), ()
+      let sql = 'INSERT INTO book (name, cover_photo, author, detail, price, brief, size, tag) VALUES';
+      let data = [];
+      for (let i = 0; i < fileNames.length; i++) {
+        if (i === fileNames.length - 1) {
+          sql += `(?, ?, ?, ?, ?, ?, ?, ?);`;
+        } else {
+          sql += `(?, ?, ?, ?, ?, ?, ?, ?),`;
+        }
+        data.push(fileNames[i], cover_photo, author, fileContents[i], price, briefs[i], size, tag);
+      }
+      DBHelper(sql, (err, results) => {
+        if (err) {
+          logger.error(err);
+          res.status(400).send({ error_massage: err });
+          return;
+        }
+        res.status(200).send("success");
+      }, data);
+    } catch (error) {
+      logger.error(error);
+      res.status(400).send({ error_massage: 'File upload failed, coding is not supported, please try again' });
+    }
+  }
+
   static deleteNovel(req, res) {
     const id = req.query.id;
     const sql = `DELETE FROM book WHERE id=?`;
