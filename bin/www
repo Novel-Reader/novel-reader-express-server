@@ -2,6 +2,7 @@
 var http = require('http');
 var utils = require('./utils.js');
 var app = require('../dist/app.js');
+var startSchedule = require('../dist/schedule.js');
 var logger = require('../dist/utils/logger.js');
 
 // Get port from environment and store in Express.
@@ -15,5 +16,7 @@ var server = http.createServer(app);
 server.listen(port);
 server.on('error', utils.onError);
 server.on('listening', () => { utils.onListening(server) });
+
+startSchedule();
 
 logger.info("Server is running on port:", port);
