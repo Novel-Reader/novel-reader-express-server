@@ -6,7 +6,7 @@ const { getTags } = require("./utils/get-tags.js");
 function startSchedule() {
   // eslint-disable-next-line no-new
   const updateTagsJob = schedule.scheduleJob('0 * * * * *', () => {
-    const sql = `SELECT id, name, detail FROM book WHERE tag = ''`;
+    const sql = `SELECT id, name, detail FROM book WHERE tag = '' OR tag IS NULL`;
     DBHelper(sql, (err, results) => {
       if (err) {
         logger.error(err);
