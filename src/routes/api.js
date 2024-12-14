@@ -26,7 +26,7 @@ router.post("/novel", ApiNovel.addNovel);
 router.delete("/novel", ApiNovel.deleteNovel);
 router.get("/novel_list", ApiNovel.getNovelList);
 router.post("/search-novel", ApiNovel.searchNovel);
-router.get("/search-novel", ApiNovel.getNovelDetail);
+router.get("/novel-detail", ApiNovel.getNovelDetail);
 
 // upload.none() 表示不处理文件上传，只处理表单数据
 // upload.single('file') 表示处理一个名为 file 的文件字段

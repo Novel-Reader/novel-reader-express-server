@@ -132,41 +132,26 @@ class ApiNovel {
     );
   }
 
-  // search novel and return 10 results
   static searchNovel(req, res) {
-    const { name, author, price } = req.body;
-    if (!name && !author && !price) {
-      res.status(400).send({ error_massage: "query parameters is null" });
+    const { keyword } = req.body;
+    if (!keyword) {
+      res.status(400).send({ error_massage: "search keyword is null" });
     }
-    let sql = `SELECT id, name, author, price, brief, cover_photo, size, tag FROM book WHERE `;
-    const params = [];
-    const sql_list = [];
-    if (name) {
-      sql_list.push(" name LIKE ? ");
-      params.push(`%${name}%`);
-    }
-    if (author) {
-      sql_list.push(" author LIKE ? ");
-      params.push(`%${author}%`);
-    }
-    if (price) {
-      sql_list.push(" price=? ");
-      params.push(price);
-    }
-    sql += sql_list.join("and");
-    sql += " limit 10";
-    DBHelper(
-      sql,
-      (err, results) => {
-        if (err) {
-          logger.error(err);
-          res.status(400).send({ error_massage: err });
-          return;
-        }
-        res.status(200).send(results);
-      },
-      params
-    );
+    // LIKE 是大小写敏感的，区分大小写字母。ILIKE 是大小写不敏感的，不会区分大小写字母。
+    // ILIKE 是 PostgreSQL 特有的语法，而 LIKE 是 SQL 标准语法。
+    // 其他数据库管理系统可能不支持 ILIKE，但可以使用 LOWER() 或 UPPER() 函数来实现大小写不敏感的匹配。
+    let sql = `SELECT id, name, author, price, brief, cover_photo, size, tag FROM book WHERE name LIKE ? OR author LIKE ? OR tag LIKE ? LIMIT 20`;
+    // '%keyword%' % 是一个通配符，表示任意长度的字符串，keyword 是你要搜索的关键词，这里表示搜索含有 keyword 的数据
+    let params = [`%${keyword}%`, `%${keyword}%`, `%${keyword}%`];
+    logger.info(154, sql);
+    DBHelper(sql, (err, results) => {
+      if (err) {
+        logger.error(err);
+        res.status(400).send({ error_massage: err });
+        return;
+      }
+      res.status(200).send(results);
+    }, params);
   }
 
   // get novel detail
