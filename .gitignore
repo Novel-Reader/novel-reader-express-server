@@ -3,6 +3,7 @@
 /dist
 /build
 /mysql-data
+/coverage
 .DS_Store
 *.log
 *.log
