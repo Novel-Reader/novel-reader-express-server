@@ -22,4 +22,4 @@ const setValueFromRedis = (key, value) => {
   });
 };
 
-export { getValueFromRedis, setValueFromRedis };
+export { config, client, getValueFromRedis, setValueFromRedis };
